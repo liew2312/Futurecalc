@@ -75,6 +75,7 @@
     <div class="result">
       <div class="tile"><h3>Position Value</h3><div id="pos1" class="muted">-</div></div>
       <div class="tile"><h3>Initial Margin</h3><div id="im1" class="muted">-</div></div>
+<div class="tile"><h3>Quantity</h3><div id="qtyOut1" class="muted">-</div></div>
       <div class="tile"><h3>PnL</h3><div id="pnl1" class="muted">-</div></div>
       <div class="tile"><h3>ROI</h3><div id="roi1" class="muted">-</div></div>
       <div class="tile"><h3>Liquidation (≈)</h3><div id="liq1" class="muted">-</div></div>
@@ -139,10 +140,13 @@ function tgl(a,b){document.getElementById(a).classList.add('active');document.ge
 
 // ===== PNL (USDⓈ-M) =====
 let side1=1;
-document.getElementById('longBtn').onclick=()=>{side1=1;tgl('longBtn','shortBtn');calcPnL();};
-document.getElementById('shortBtn').onclick=()=>{side1=-1;tgl('shortBtn','longBtn');calcPnL();};
-const lev=document.getElementById('lev'),levShow=document.getElementById('levShow');lev.oninput=()=>{levShow.textContent=lev.value+'x';calcPnL();};
-['entry1','exit1','imInput'].forEach(id=>document.getElementById(id).addEventListener('input',calcPnL));
+document.getElementById('longBtn').onclick=()=>{side1=1;tgl('longBtn','shortBtn');calcPnL();
+document.addEventListener('DOMContentLoaded',()=>{calcPnL();});};
+document.getElementById('shortBtn').onclick=()=>{side1=-1;tgl('shortBtn','longBtn');calcPnL();
+document.addEventListener('DOMContentLoaded',()=>{calcPnL();});};
+const lev=document.getElementById('lev'),levShow=document.getElementById('levShow');lev.oninput=()=>{levShow.textContent=lev.value+'x';calcPnL();};calcPnL();
+document.addEventListener('DOMContentLoaded',()=>{calcPnL();});};
+['entry1','exit1','imInput'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('input',calcPnL); el.addEventListener('change',calcPnL);}});
 
 function getMMR(){const v=parseFloat(document.getElementById('mmr4').value);return isNaN(v)?0.005:Math.max(0,v)/100;}
 
@@ -179,6 +183,7 @@ function calcPnL(){
   document.getElementById('liq1').textContent = isFinite(liq)? fmt(liq,6) : '-';
 }
 calcPnL();
+document.addEventListener('DOMContentLoaded',()=>{calcPnL();});
 
 // ===== TARGET =====
 let side2=1;
@@ -218,7 +223,8 @@ lev3.oninput=calcMax; calcMax();
 let side3=1;
 document.getElementById('longBtn3').onclick=()=>{side3=1;tgl('longBtn3','shortBtn3');calcLiq();};
 document.getElementById('shortBtn3').onclick=()=>{side3=-1;tgl('shortBtn3','longBtn3');calcLiq();};
-['entry4','lev4','mmr4'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{calcLiq(); calcPnL();}));
+['entry4','lev4','mmr4'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{calcLiq(); calcPnL();
+document.addEventListener('DOMContentLoaded',()=>{calcPnL();});}));
 function calcLiq(){
   const entry=parseFloat(document.getElementById('entry4').value)||0;
   const L=Math.max(1, parseInt(document.getElementById('lev4').value)||1);
