@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="th">
 <head>
-<link rel="icon" href="icons/icon-192.png" type="image/png" />
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0b1020">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -46,7 +45,7 @@
     <div class="logo"></div>
     <div>
       <h1>Futures คำนวณ PnL / Target / Max / Liquidation</h1>
-      <div class="muted" style="font-size:.8rem">เวอร์ชันแก้ PnL — รองรับ Qty (เหรียญ) หรือ Position (USDT)</div>
+      <div class="muted" style="font-size:.8rem">เวอร์ชันแก้ PnL — กรอก Initial Margin ได้โดยตรง (แทน Qty/Position)</div>
     </div>
   </header>
 
@@ -69,8 +68,7 @@
     <div class="row"><div><label>Symbol (เช่น BTCUSDT)</label><input id="symbol1" type="text" placeholder="BTCUSDT"></div>
       <div><label>Entry Price</label><input id="entry1" type="number" step="0.0001" value="23.500"></div>
       <div><label>Exit Price</label><input id="exit1" type="number" step="0.0001" value="24.000"></div>
-      <div><label>Quantity (เหรียญ)</label><input id="qty1" type="number" step="0.000001" value="10"></div>
-      <div><label>หรือ Position (USDT)</label><input id="posUSDT1" type="number" step="0.01" placeholder="เช่น 1000"></div>
+      <div><label>Initial Margin (USDT)</label><input id="imInput" type="number" step="0.01" placeholder="เช่น 200"></div>
     </div>
 
     <div class="divider"></div>
@@ -144,7 +142,7 @@ let side1=1;
 document.getElementById('longBtn').onclick=()=>{side1=1;tgl('longBtn','shortBtn');calcPnL();};
 document.getElementById('shortBtn').onclick=()=>{side1=-1;tgl('shortBtn','longBtn');calcPnL();};
 const lev=document.getElementById('lev'),levShow=document.getElementById('levShow');lev.oninput=()=>{levShow.textContent=lev.value+'x';calcPnL();};
-['entry1','exit1','qty1','posUSDT1'].forEach(id=>document.getElementById(id).addEventListener('input',calcPnL));
+['entry1','exit1','imInput'].forEach(id=>document.getElementById(id).addEventListener('input',calcPnL));
 
 function getMMR(){const v=parseFloat(document.getElementById('mmr4').value);return isNaN(v)?0.005:Math.max(0,v)/100;}
 
@@ -239,9 +237,8 @@ function saveAsImage(){
   const symbol=document.getElementById('symbol1').value || '-';
   const entry=document.getElementById('entry1').value || '-';
   const exit =document.getElementById('exit1').value  || '-';
-  const qty  =document.getElementById('qty1').value   || '-';
-  const posUS=document.getElementById('posUSDT1').value||'';
-  const levv =document.getElementById('lev').value    || '-';
+  const imInput=document.getElementById('imInput').value||'0';
+const levv =document.getElementById('lev').value    || '-';
   const pos  =document.getElementById('pos1').textContent || '-';
   const im   =document.getElementById('im1').textContent  || '-';
   const pnl  =document.getElementById('pnl1').textContent || '-';
@@ -256,7 +253,8 @@ function saveAsImage(){
   ctx.fillStyle='#e5e7eb'; ctx.font='bold 44px system-ui, Segoe UI, Roboto';
   ctx.fillText('คำนวน Trade Futures – สรุปผลลัพธ์', 40, 80);
   ctx.font='600 28px system-ui, Segoe UI, Roboto'; ctx.fillStyle='#9aa4b2';
-  const qtyShow = posUS ? `${posUS} USDT (~${qty}u)` : `${qty}u`;
+  const qtyCalc = (parseFloat(imInput)>0 && parseFloat(entry)>0) ? ((parseFloat(imInput)*parseFloat(levv))/parseFloat(entry)) : 0;
+  const qtyShow = `${qtyCalc}u`;
   ctx.fillStyle='#22d3ee'; ctx.fillText(`Symbol: ${symbol}`, 40, 160); ctx.fillStyle='#9aa4b2';
   ctx.fillText(`โหมด: ${side}  •  Leverage: ${levv}x`, 40, 120);
   const box=(x,y,title,value,color='#e5e7eb')=>{

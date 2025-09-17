@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'futures-calc-cache-v1';
+const CACHE_NAME = 'futurecalculate-im-v1';
 const ASSETS = [
   './',
   './index.html',
@@ -25,14 +25,10 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
-  // Cache-first for same-origin
   if (url.origin === location.origin) {
     e.respondWith(
       caches.match(e.request).then((cached) => {
-        return cached || fetch(e.request).then((resp) => {
-          // Optionally update cache
-          return resp;
-        }).catch(() => caches.match('./index.html'));
+        return cached || fetch(e.request).catch(() => caches.match('./index.html'));
       })
     );
   }
