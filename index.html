@@ -192,7 +192,7 @@ function calcPnL(){
   const mmr = getMMR();
   let liq = NaN;
   if(entry>0 && L>0){ liq = side1===1 ? entry*(1 - 1/L + mmr) : entry*(1 + 1/L - mmr); }
-  document.getElementById('liq1').textContent = isFinite(liq)? fmt(liq,6) : '-';
+  document.getElementById('liq1').textContent = isFinite(liq)? fmt(liq,2) : '-';
 }
 calcPnL();
 
@@ -242,7 +242,7 @@ function calcLiq(){
   let liq = NaN;
   if(entry>0 && L>0){ liq = side3===1 ? entry*(1 - 1/L + mmr) : entry*(1 + 1/L - mmr); }
   const dist = isFinite(liq) && entry>0 ? Math.abs((liq-entry)/entry)*100 : NaN;
-  document.getElementById('liq4').textContent = isFinite(liq)? fmt(liq,6) : '-';
+  document.getElementById('liq4').textContent = isFinite(liq)? fmt(liq,2) : '-';
   document.getElementById('dist4').textContent = isFinite(dist)? fmt(dist,2)+' %' : '-';
 }
 calcLiq();
