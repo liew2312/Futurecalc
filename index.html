@@ -182,7 +182,7 @@ function calcPnL(){
 
   document.getElementById('pos1').textContent = isFinite(position)? fmt(position,2)+' USDT':'-';
   document.getElementById('im1').textContent  = isFinite(imIn)? fmt(imIn,2)+' USDT':'-';
-  document.getElementById('qtyShow1').textContent = isFinite(qty)? fmt(qty,6)+' u':'-';
+  document.getElementById('qtyShow1').textContent = isFinite(qty)? fmt(qty,2)+' u':'-';
   document.getElementById('pnl1').textContent = isFinite(pnl)? ((pnl>=0?'+':'')+fmt(pnl,2)+' USDT'):'-';
   document.getElementById('pnl1').className   = 'muted ' + (isFinite(pnl)? (pnl>=0?'pos':'neg') : '');
   document.getElementById('roi1').textContent = isFinite(roi)?((roi>=0?'+':'')+fmt(roi,2)+' %'):'-';
